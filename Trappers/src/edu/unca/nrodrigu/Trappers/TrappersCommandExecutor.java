@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TrappersCommandExecutor implements CommandExecutor {
+	@SuppressWarnings("unused")
 	private final Trappers plugin;
 
 	/*
