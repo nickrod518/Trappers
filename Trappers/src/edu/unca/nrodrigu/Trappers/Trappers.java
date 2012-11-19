@@ -30,6 +30,7 @@ public class Trappers extends JavaPlugin {
 		new TrappersEventListener(this);
 
 		// set the command executors
+		this.getCommand("trapper").setExecutor(executor);
 	}
 
 	/*

@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TrappersCommandExecutor implements CommandExecutor {
-	@SuppressWarnings("unused")
 	private final Trappers plugin;
 
 	/*
@@ -21,8 +20,30 @@ public class TrappersCommandExecutor implements CommandExecutor {
 		if (!(sender instanceof Player)) {
 			return false;
 
-		// stub command
-		} else if (command.getName().equalsIgnoreCase("trap")) {
+		// grant permission for player to use traps
+		} else if (command.getName().equalsIgnoreCase("trapper") && sender.hasPermission("trappers.trapper")) {
+			Player player;
+			// if no player arg given, activate on sender
+			if (args.length == 0) {
+				player = (Player) sender;
+			} else {
+				player = plugin.getServer().getPlayer(args[0]);
+				if (player == null || !player.isOnline()) {
+					sender.sendMessage("Player not found!");
+					return false;
+				}
+			}
+			
+			if (!(Boolean) plugin.getMetadata(player, "trapper", plugin)) {
+				plugin.setMetadata(player, "trapper", true, plugin);
+				sender.sendMessage("You are now a trapper!");
+				plugin.logger.info(player.getName() + " is a trapper.");
+			} else {
+				plugin.setMetadata(player, "trapper", false, plugin);
+				sender.sendMessage("You are no longer a trapper.");
+				plugin.logger.info(player.getName() + " is no longer a trapper.");
+			}
+
 			return true;
 
 		} else {

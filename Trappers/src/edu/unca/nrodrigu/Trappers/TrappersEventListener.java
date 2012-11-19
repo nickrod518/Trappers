@@ -32,7 +32,7 @@ public class TrappersEventListener implements Listener {
 		plugin.logger.info("Give a warm welcome to " + event.getPlayer().getName());
 		event.getPlayer().sendMessage("Welcome " + event.getPlayer().getName() + ", enjoy your stay!");
 		Player player = event.getPlayer();
-		plugin.setMetadata(player, "trapper", true, plugin);
+		plugin.setMetadata(player, "trapper", false, plugin);
 	}
 	
 	/*
