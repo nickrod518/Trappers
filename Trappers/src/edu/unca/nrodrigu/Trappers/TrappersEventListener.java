@@ -3,11 +3,15 @@ package edu.unca.nrodrigu.Trappers;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -36,7 +40,7 @@ public class TrappersEventListener implements Listener {
 	}
 	
 	/*
-	 * If player interacts with a tree, set a trap on it
+	 * Allow trappers to set traps
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void trap(PlayerInteractEvent event) {
@@ -97,6 +101,30 @@ public class TrappersEventListener implements Listener {
 						plugin.logger.info("Watch your step!");
 					}
 				}
+			}
+		}
+	}
+	
+	/*
+	 * Sends messages and logs if an entity is hurt by a trap
+	 */
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onTrap(EntityDamageEvent event) {
+		
+		// if the player was hurt by an explosion, it was a trap
+		if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+
+			// get the damagee
+			Entity damagee = event.getEntity();
+			// if damagee was a player
+			if (damagee instanceof Player) {
+				Player player = (Player) damagee;
+				plugin.logger.info(player.getName() + " was hurt by a trap!");
+				player.sendMessage("Look out for traps!");
+				
+			// damagee was a mob
+			} else if (damagee instanceof LivingEntity){
+				plugin.logger.info("That poor " + damagee.getType() + " did nothin' to nobody!");
 			}
 		}
 	}
