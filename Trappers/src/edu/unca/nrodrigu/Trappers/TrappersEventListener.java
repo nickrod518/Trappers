@@ -44,61 +44,71 @@ public class TrappersEventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void trap(PlayerInteractEvent event) {
+		// get player that event is called on
+		Player player = event.getPlayer();
+		
+		// check that the player is a trapper
 		if ((Boolean) plugin.getMetadata(event.getPlayer(), "trapper", plugin)) {
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				Block b = event.getClickedBlock();
-				if (b != null) {
-					
-					// if it's wood, make a tree trap
-					if (b.getTypeId() == 17){
-						Location loc = b.getLocation();
+			
+			// check that the trapper has shears in their hand
+			if (player.getItemInHand().getType() == Material.SHEARS) {
+				
+				// if they right clicked, lay a trap
+				if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					Block b = event.getClickedBlock();
+					if (b != null) {
 						
-						// find the block under the tree
-						while (loc.getBlock().getTypeId() == 17) {
+						// if it's wood, make a tree trap
+						if (b.getTypeId() == 17){
+							Location loc = b.getLocation();
+							
+							// find the block under the tree
+							while (loc.getBlock().getTypeId() == 17) {
+								loc.setY(loc.getY() - 1);
+							}
+							
+							// change block to a lever
+							loc.getBlock().setType(Material.LEVER);
+							// set lever on ceiling
+							loc.getBlock().setData((byte) 0x0);
+							
 							loc.setY(loc.getY() - 1);
-						}
-						
-						// change block to a lever
-						loc.getBlock().setType(Material.LEVER);
-						// set lever on ceiling
-						loc.getBlock().setData((byte) 0x0);
-						
-						loc.setY(loc.getY() - 1);
-						loc.getBlock().setType(Material.WOOD_PLATE);
-						
-						// start in corner, and wrap TNT around wood plate
-						loc.setX(loc.getX() - 1);
-						loc.setZ(loc.getZ() - 1);
-						loc.getBlock().setType(Material.TNT);
-						for (int i = 0; i < 2; ++i) {
-							loc.setZ(loc.getZ() + 1);
-							loc.getBlock().setType(Material.TNT);
-						}
-						for (int i = 0; i < 2; ++i) {
-							loc.setX(loc.getX() + 1);
-							loc.getBlock().setType(Material.TNT);
-						}
-						for (int i = 0; i < 2; ++i) {
+							loc.getBlock().setType(Material.WOOD_PLATE);
+							
+							// start in corner, and wrap TNT around wood plate
+							loc.setX(loc.getX() - 1);
 							loc.setZ(loc.getZ() - 1);
 							loc.getBlock().setType(Material.TNT);
-						}
-						for (int i = 0; i < 2; ++i) {
-							loc.setX(loc.getX() - 1);
+							for (int i = 0; i < 2; ++i) {
+								loc.setZ(loc.getZ() + 1);
+								loc.getBlock().setType(Material.TNT);
+							}
+							for (int i = 0; i < 2; ++i) {
+								loc.setX(loc.getX() + 1);
+								loc.getBlock().setType(Material.TNT);
+							}
+							for (int i = 0; i < 2; ++i) {
+								loc.setZ(loc.getZ() - 1);
+								loc.getBlock().setType(Material.TNT);
+							}
+							for (int i = 0; i < 2; ++i) {
+								loc.setX(loc.getX() - 1);
+								loc.getBlock().setType(Material.TNT);
+							}
+							
+							player.sendMessage("Now, we wait...");
+							plugin.logger.info("Everyone should go cut some trees down!");
+							
+						// if it's any other block, plant a mine (TNT under pressure plate)
+						} else {
+							Location loc = b.getLocation();
 							loc.getBlock().setType(Material.TNT);
+							loc.setY(loc.getY() + 1);
+							loc.getBlock().setType(Material.WOOD_PLATE);
+							
+							player.sendMessage("Now, we wait...");
+							plugin.logger.info("Watch your step!");
 						}
-						
-						event.getPlayer().sendMessage("Now, we wait...");
-						plugin.logger.info("Everyone should go cut some trees down!");
-						
-					// if it's any other block, plant a mine (TNT under pressure plate)
-					} else {
-						Location loc = b.getLocation();
-						loc.getBlock().setType(Material.TNT);
-						loc.setY(loc.getY() + 1);
-						loc.getBlock().setType(Material.WOOD_PLATE);
-						
-						event.getPlayer().sendMessage("Now, we wait...");
-						plugin.logger.info("Watch your step!");
 					}
 				}
 			}
