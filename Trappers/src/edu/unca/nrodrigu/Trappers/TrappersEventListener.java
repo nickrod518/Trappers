@@ -2,6 +2,8 @@ package edu.unca.nrodrigu.Trappers;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.TreeType;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -33,16 +35,21 @@ public class TrappersEventListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		plugin.logger.info("Give a warm welcome to " + event.getPlayer().getName());
-		event.getPlayer().sendMessage("Welcome " + event.getPlayer().getName() + ", enjoy your stay!");
 		Player player = event.getPlayer();
+		plugin.logger.info("Give a warm welcome to " + player.getName());
+		player.sendMessage("Be careful, " + player.getName() + ", you are being hunted!");
 		plugin.setMetadata(player, "trapper", false, plugin);
+		
+		// lower player's health and food and clear inventory
+		player.setHealth(10);
+		player.setFoodLevel(10);
+		player.getInventory().clear();
 	}
 	
 	/*
 	 * Allow trappers to set traps
 	 */
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void trap(PlayerInteractEvent event) {
 		// get player that event is called on
 		Player player = event.getPlayer();
@@ -52,6 +59,30 @@ public class TrappersEventListener implements Listener {
 			
 			// check that the trapper has shears in their hand
 			if (player.getItemInHand().getType() == Material.SHEARS) {
+				
+				// if they left clicked, create a tree stand
+				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+					Block b = event.getClickedBlock();
+					
+					if (b != null) {
+						Location loc = b.getLocation();
+						Location loc2 = loc;
+						// ladder placement is parallel to tree
+						loc2.setX(loc2.getX() + 1);
+						World world = loc.getWorld();
+						
+						// generate a tree at the selected block
+						loc = b.getLocation();
+						world.generateTree(loc, TreeType.TREE);
+						
+						// put a ladder on the side of the tree
+						while (loc.getBlock().getTypeId() == 17) {
+							loc2.getBlock().setType(Material.LADDER);
+							loc.setY(loc.getY() + 1);
+							loc2.setY(loc.getY());
+						}
+					}
+				}
 				
 				// if they right clicked, lay a trap
 				if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {

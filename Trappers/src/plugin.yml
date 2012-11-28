@@ -1,6 +1,6 @@
 main: edu.unca.nrodrigu.Trappers.Trappers
 name: Trappers
-version: 0.4
+version: 0.5
 author: Nick Rodriguez & Andrew Zorn
 description: Final Project
 commands:
