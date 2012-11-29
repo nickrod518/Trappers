@@ -2,9 +2,8 @@ package edu.unca.nrodrigu.Trappers;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.TreeType;
-import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -64,20 +63,38 @@ public class TrappersEventListener implements Listener {
 				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 					Block b = event.getClickedBlock();
 					
-					if (b != null) {
+					// if you left clicked a tree, place a ladder on it
+					if (b != null && b.getTypeId() == 17) {
+						BlockFace clickedFace = event.getBlockFace();
+						byte data = 0;
 						Location loc = b.getLocation();
-						Location loc2 = loc;
-						// ladder placement is parallel to tree
-						loc2.setX(loc2.getX() + 1);
-						World world = loc.getWorld();
 						
-						// generate a tree at the selected block
-						loc = b.getLocation();
-						world.generateTree(loc, TreeType.TREE);
-						
-						// put a ladder on the side of the tree
+						// set loc to the bottom of the tree
 						while (loc.getBlock().getTypeId() == 17) {
-							loc2.getBlock().setType(Material.LADDER);
+							loc.setY(loc.getY() - 1);
+						}
+						
+						// loc2 will be used to place the ladder
+						Location loc2 = loc;
+						
+						// use the clicked face to find what side to put the ladder on
+						if (clickedFace == BlockFace.NORTH) {
+							loc2.setZ(loc2.getZ() + 1);
+							data = 0x2;
+						} else if (clickedFace == BlockFace.SOUTH) {
+							loc2.setZ(loc2.getZ() - 1);
+							data = 0x3;
+						} else if (clickedFace == BlockFace.WEST) {
+							loc2.setX(loc2.getX() - 1);
+							data = 0x4;
+						} else if (clickedFace == BlockFace.EAST) {
+							loc2.setX(loc2.getX() + 1);
+							data = 0x5;
+						}
+						
+						// put a ladder up the side of the tree
+						while (loc.getBlock().getTypeId() == 17) {
+							loc2.getBlock().setTypeIdAndData(65, data, true);
 							loc.setY(loc.getY() + 1);
 							loc2.setY(loc.getY());
 						}
@@ -98,10 +115,8 @@ public class TrappersEventListener implements Listener {
 								loc.setY(loc.getY() - 1);
 							}
 							
-							// change block to a lever
-							loc.getBlock().setType(Material.LEVER);
-							// set lever on ceiling
-							loc.getBlock().setData((byte) 0x0);
+							// change block to a lever and set on ceiling
+							loc.getBlock().setTypeIdAndData(Material.LEVER.getId(), (byte) 0x0, true);
 							
 							loc.setY(loc.getY() - 1);
 							loc.getBlock().setType(Material.WOOD_PLATE);
