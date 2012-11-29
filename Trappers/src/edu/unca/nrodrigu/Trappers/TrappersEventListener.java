@@ -35,7 +35,7 @@ public class TrappersEventListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		plugin.logger.info("Give a warm welcome to " + player.getName());
+		plugin.logger.info(player.getName() + " has joined the survival.");
 		player.sendMessage("Be careful, " + player.getName() + ", you are being hunted!");
 		plugin.setMetadata(player, "trapper", false, plugin);
 		
@@ -63,36 +63,61 @@ public class TrappersEventListener implements Listener {
 				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 					Block b = event.getClickedBlock();
 					
-					// if you left clicked a tree, place a ladder up its side
-					if (b != null && b.getTypeId() == 17) {
-						BlockFace clickedFace = event.getBlockFace();
-						byte data = 0;
-						Location loc = b.getLocation();
+					if (b != null) {
 						
-						// set loc to the bottom of the tree
-						while (loc.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 17) {
-							loc.setY(loc.getY() - 1);
-						}
-						
-						// loc2 will be used to place the ladder
-						Location loc2 = loc.getBlock().getRelative(clickedFace).getLocation();
-						
-						// use the clicked face to find what side to put the ladder on
-						if (clickedFace == BlockFace.NORTH) {
-							data = 0x4;
-						} else if (clickedFace == BlockFace.SOUTH) {
-							data = 0x5;
-						} else if (clickedFace == BlockFace.EAST) {
-							data = 0x2;
-						} else if (clickedFace == BlockFace.WEST) {
-							data = 0x3;
-						} 
-						
-						// put a ladder up the side of the tree
-						while (loc.getBlock().getTypeId() == 17) {
-							loc2.getBlock().setTypeIdAndData(65, data, true);
-							loc.setY(loc.getY() + 1);
-							loc2.setY(loc.getY());
+						// if the block is wood, create a ladder up its side
+						if (b.getTypeId() == 17) {
+							Location loc = b.getLocation();
+							BlockFace clickedFace = event.getBlockFace();
+							byte data = 0;
+							
+							// set loc to the bottom of the tree
+							while (loc.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 17) {
+								loc.setY(loc.getY() - 1);
+							}
+							
+							// loc2 will be used to place the ladder
+							Location loc2 = loc.getBlock().getRelative(clickedFace).getLocation();
+							
+							// use the clicked face to find what side to put the ladder on
+							if (clickedFace == BlockFace.NORTH) {
+								data = 0x4;
+							} else if (clickedFace == BlockFace.SOUTH) {
+								data = 0x5;
+							} else if (clickedFace == BlockFace.EAST) {
+								data = 0x2;
+							} else if (clickedFace == BlockFace.WEST) {
+								data = 0x3;
+							} 
+							
+							// put a ladder up the side of the tree
+							while (loc.getBlock().getTypeId() == 17) {
+								loc2.getBlock().setTypeIdAndData(65, data, true);
+								loc.setY(loc.getY() + 1);
+								loc2.setY(loc.getY());
+							}
+							
+						// if player didn't click wood, surround with leaves
+						} else {
+							Location loc = event.getPlayer().getLocation();
+							
+							// increment through too many for loops to surround player with leaves
+							for (int i = 0; i < 3; ++i) {
+								for (int j = 0; j < 3; ++j) {
+									for (int k = 0; k < 3; ++k) {
+										
+										// about a 75% change that leaves will generate at this location
+										if (((int) (Math.random() * 100)) < 75) {
+											loc.getBlock().setType(Material.LEAVES);
+										}
+										loc.setX(loc.getX() + 1);
+									}
+									loc.setX(event.getPlayer().getLocation().getX() - 1);
+									loc.setZ(loc.getZ() + 1);
+								}
+								loc.setZ(event.getPlayer().getLocation().getZ() - 1);
+								loc.setY(loc.getY() + 1);
+							}
 						}
 					}
 				}

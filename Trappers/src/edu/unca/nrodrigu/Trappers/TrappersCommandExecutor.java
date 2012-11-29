@@ -41,7 +41,7 @@ public class TrappersCommandExecutor implements CommandExecutor {
 			
 			if (!(Boolean) plugin.getMetadata(player, "trapper", plugin)) {
 				plugin.setMetadata(player, "trapper", true, plugin);
-				sender.sendMessage("You are now a trapper! Use shears to lay mines or tree traps.");
+				sender.sendMessage("You are now a trapper! Shears are your new best friend!");
 				plugin.logger.info(player.getName() + " is a trapper.");
 				
 				// restore the player's health and food
@@ -50,13 +50,12 @@ public class TrappersCommandExecutor implements CommandExecutor {
 				
 				// equip the trapper
 				player.setItemInHand(new ItemStack(Material.SHEARS, 1));
+				player.getInventory().addItem(new ItemStack(Material.IRON_SWORD, 1));
 				player.getInventory().addItem(new ItemStack(Material.BOW, 1));
 				player.getInventory().addItem(new ItemStack(Material.ARROW, 40));
 				player.getInventory().addItem(new ItemStack(Material.MAP, 1));
 				player.getInventory().addItem(new ItemStack(Material.WATCH, 1));
 				player.getInventory().addItem(new ItemStack(Material.COMPASS, 1));
-				player.getInventory().addItem(new ItemStack(Material.IRON_SWORD, 1));
-				player.getInventory().addItem(new ItemStack(Material.SHEARS, 1));
 				
 				// armor
 				player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
