@@ -59,38 +59,34 @@ public class TrappersEventListener implements Listener {
 			// check that the trapper has shears in their hand
 			if (player.getItemInHand().getType() == Material.SHEARS) {
 				
-				// if they left clicked, create a tree stand
+				// if they left clicked create a tree stand
 				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 					Block b = event.getClickedBlock();
 					
-					// if you left clicked a tree, place a ladder on it
+					// if you left clicked a tree, place a ladder up its side
 					if (b != null && b.getTypeId() == 17) {
 						BlockFace clickedFace = event.getBlockFace();
 						byte data = 0;
 						Location loc = b.getLocation();
 						
 						// set loc to the bottom of the tree
-						while (loc.getBlock().getTypeId() == 17) {
+						while (loc.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 17) {
 							loc.setY(loc.getY() - 1);
 						}
 						
 						// loc2 will be used to place the ladder
-						Location loc2 = loc;
+						Location loc2 = loc.getBlock().getRelative(clickedFace).getLocation();
 						
 						// use the clicked face to find what side to put the ladder on
 						if (clickedFace == BlockFace.NORTH) {
-							loc2.setZ(loc2.getZ() + 1);
-							data = 0x2;
-						} else if (clickedFace == BlockFace.SOUTH) {
-							loc2.setZ(loc2.getZ() - 1);
-							data = 0x3;
-						} else if (clickedFace == BlockFace.WEST) {
-							loc2.setX(loc2.getX() - 1);
 							data = 0x4;
-						} else if (clickedFace == BlockFace.EAST) {
-							loc2.setX(loc2.getX() + 1);
+						} else if (clickedFace == BlockFace.SOUTH) {
 							data = 0x5;
-						}
+						} else if (clickedFace == BlockFace.EAST) {
+							data = 0x2;
+						} else if (clickedFace == BlockFace.WEST) {
+							data = 0x3;
+						} 
 						
 						// put a ladder up the side of the tree
 						while (loc.getBlock().getTypeId() == 17) {
