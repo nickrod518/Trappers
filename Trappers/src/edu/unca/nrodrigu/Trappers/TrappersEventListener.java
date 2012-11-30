@@ -71,7 +71,9 @@ public class TrappersEventListener implements Listener {
 						if (b.getTypeId() == 17 && player.getInventory().contains(Material.EMERALD, 1)) {
 							// costs 1 emerald
 							player.getInventory().removeItem(new ItemStack[] {
-									new ItemStack(Material.getMaterial(388), 2) });
+									new ItemStack(Material.getMaterial(388), 1) });
+							player.sendMessage("That ladder cost 1 emerald.");
+							
 							Location loc = b.getLocation();
 							BlockFace clickedFace = event.getBlockFace();
 							byte data = 0;
@@ -104,28 +106,6 @@ public class TrappersEventListener implements Listener {
 							
 						} else if (b.getTypeId() == 17 && !player.getInventory().contains(Material.EMERALD, 1)) {
 							player.sendMessage(ChatColor.RED + "You don't have enough emeralds!");
-							
-						// camo
-						} else {
-							Location loc = event.getPlayer().getLocation();
-							
-							// increment through too many for loops to surround player with leaves
-							for (int i = 0; i < 3; ++i) {
-								for (int j = 0; j < 3; ++j) {
-									for (int k = 0; k < 3; ++k) {
-										
-										// about a 75% change that leaves will generate at this location
-										if (((int) (Math.random() * 100)) < 75) {
-											loc.getBlock().setType(Material.LEAVES);
-										}
-										loc.setX(loc.getX() + 1);
-									}
-									loc.setX(event.getPlayer().getLocation().getX() - 1);
-									loc.setZ(loc.getZ() + 1);
-								}
-								loc.setZ(event.getPlayer().getLocation().getZ() - 1);
-								loc.setY(loc.getY() + 1);
-							}
 						}
 					}
 				}
@@ -140,6 +120,8 @@ public class TrappersEventListener implements Listener {
 							// costs 2 emeralds
 							player.getInventory().removeItem(new ItemStack[] {
 									new ItemStack(Material.getMaterial(388), 2) });
+							player.sendMessage("That tree trap cost 2 emeralds.");
+							
 							Location loc = b.getLocation();
 							
 							// find the block under the tree
@@ -182,6 +164,8 @@ public class TrappersEventListener implements Listener {
 							// costs 1 emerald
 							player.getInventory().removeItem(new ItemStack[] {
 									new ItemStack(Material.getMaterial(388), 1) });
+							player.sendMessage("That mine cost 1 emerald");
+							
 							Location loc = b.getLocation();
 							loc.getBlock().setType(Material.TNT);
 							loc.setY(loc.getY() + 1);

@@ -1,17 +1,23 @@
 main: edu.unca.nrodrigu.Trappers.Trappers
 name: Trappers
-version: 0.9
+version: 1.0
 author: Nick Rodriguez & Andrew Zorn
 description: Final Project
 commands:
   trapper:
     description: give player ability to set traps
-    usage: /trap <player>
+    usage: /trapper <player>
     permission: trappers.trapper
+  camo:
+    description: generate leaves around player
+    usage: /camo
+    permission: trappers.camo
 permission:
   trappers.*:
     description: permission for all plugin commands
     default: false
     children:
-      demo.trapper:
+      trappers.trapper:
         default: op
+      trappers.camo:
+        default: true

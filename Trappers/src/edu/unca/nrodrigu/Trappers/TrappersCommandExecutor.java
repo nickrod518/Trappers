@@ -1,5 +1,7 @@
 package edu.unca.nrodrigu.Trappers;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +24,7 @@ public class TrappersCommandExecutor implements CommandExecutor {
 		if (!(sender instanceof Player)) {
 			return false;
 
-		// grant permission for player to use traps
+		// grant permission for player to use trapper commands
 		} else if (command.getName().equalsIgnoreCase("trapper") && sender.hasPermission("trappers.trapper")) {
 			Player player;
 			// if no player arg given, activate on sender
@@ -71,6 +73,8 @@ public class TrappersCommandExecutor implements CommandExecutor {
 				// trap money
 				player.getInventory().addItem(new ItemStack(388, 25));
 				
+			
+					
 			} else {
 				plugin.setMetadata(player, "trapper", false, plugin);
 				sender.sendMessage("You are no longer a trapper.");
@@ -78,7 +82,36 @@ public class TrappersCommandExecutor implements CommandExecutor {
 			}
 
 			return true;
-
+			
+		// generate leaves around player
+		} else if (command.getName().equalsIgnoreCase("camo")) {
+			if ((Boolean) plugin.getMetadata((Player) sender, "trapper", plugin)) {
+				Player player = (Player) sender;
+				Location loc = player.getLocation();
+				
+				// increment through too many for loops to surround player with leaves
+				for (int i = 0; i < 3; ++i) {
+					for (int j = 0; j < 3; ++j) {
+						for (int k = 0; k < 3; ++k) {
+							
+							// about a 75% change that leaves will generate at this location
+							if (((int) (Math.random() * 100)) < 75) {
+								loc.getBlock().setType(Material.LEAVES);
+							}
+							loc.setX(loc.getX() + 1);
+						}
+						loc.setX(player.getLocation().getX() - 1);
+						loc.setZ(loc.getZ() + 1);
+					}
+					loc.setZ(player.getLocation().getZ() - 1);
+					loc.setY(loc.getY() + 1);
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Only trappers can use that command.");
+			}
+			
+			return true;
+				
 		} else {
 			return false;
 		}

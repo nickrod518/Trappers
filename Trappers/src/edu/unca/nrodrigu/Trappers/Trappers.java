@@ -31,6 +31,7 @@ public class Trappers extends JavaPlugin {
 
 		// set the command executors
 		this.getCommand("trapper").setExecutor(executor);
+		this.getCommand("camo").setExecutor(executor);
 	}
 
 	/*
