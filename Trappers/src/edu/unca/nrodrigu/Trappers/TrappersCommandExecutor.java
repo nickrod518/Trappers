@@ -48,7 +48,7 @@ public class TrappersCommandExecutor implements CommandExecutor {
 				player.setHealth(20);
 				player.setFoodLevel(20);
 				
-				// equip the trapper
+				// tools
 				player.setItemInHand(new ItemStack(Material.SHEARS, 1));
 				player.getInventory().addItem(new ItemStack(Material.IRON_SWORD, 1));
 				player.getInventory().addItem(new ItemStack(Material.BOW, 1));
@@ -67,6 +67,9 @@ public class TrappersCommandExecutor implements CommandExecutor {
 				player.getInventory().addItem(new ItemStack(Material.BREAD, 2));
 				player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 1));
 				player.getInventory().addItem(new ItemStack(Material.APPLE, 1));
+
+				// trap money
+				player.getInventory().addItem(new ItemStack(388, 25));
 				
 			} else {
 				plugin.setMetadata(player, "trapper", false, plugin);

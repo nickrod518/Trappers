@@ -1,5 +1,6 @@
 package edu.unca.nrodrigu.Trappers;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class TrappersEventListener implements Listener {
 	private final Trappers plugin;
@@ -36,7 +38,7 @@ public class TrappersEventListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		plugin.logger.info(player.getName() + " has joined the survival.");
-		player.sendMessage("Be careful, " + player.getName() + ", you are being hunted!");
+		player.sendMessage(ChatColor.RED + "Be careful, " + player.getName() + ", you are being hunted!");
 		plugin.setMetadata(player, "trapper", false, plugin);
 		
 		// lower player's health and food and clear inventory
@@ -65,8 +67,11 @@ public class TrappersEventListener implements Listener {
 					
 					if (b != null) {
 						
-						// if the block is wood, create a ladder up its side
-						if (b.getTypeId() == 17) {
+						// tree ladder
+						if (b.getTypeId() == 17 && player.getInventory().contains(Material.EMERALD, 1)) {
+							// costs 1 emerald
+							player.getInventory().removeItem(new ItemStack[] {
+									new ItemStack(Material.getMaterial(388), 2) });
 							Location loc = b.getLocation();
 							BlockFace clickedFace = event.getBlockFace();
 							byte data = 0;
@@ -97,7 +102,10 @@ public class TrappersEventListener implements Listener {
 								loc2.setY(loc.getY());
 							}
 							
-						// if player didn't click wood, surround with leaves
+						} else if (b.getTypeId() == 17 && !player.getInventory().contains(Material.EMERALD, 1)) {
+							player.sendMessage(ChatColor.RED + "You don't have enough emeralds!");
+							
+						// camo
 						} else {
 							Location loc = event.getPlayer().getLocation();
 							
@@ -128,7 +136,10 @@ public class TrappersEventListener implements Listener {
 					if (b != null) {
 						
 						// if it's wood, make a tree trap
-						if (b.getTypeId() == 17){
+						if (b.getTypeId() == 17 && player.getInventory().contains(Material.EMERALD, 2)){
+							// costs 2 emeralds
+							player.getInventory().removeItem(new ItemStack[] {
+									new ItemStack(Material.getMaterial(388), 2) });
 							Location loc = b.getLocation();
 							
 							// find the block under the tree
@@ -167,7 +178,10 @@ public class TrappersEventListener implements Listener {
 							plugin.logger.info("Everyone should go cut some trees down!");
 							
 						// if it's any other block, plant a mine (TNT under pressure plate)
-						} else {
+						} else if (player.getInventory().contains(Material.EMERALD, 1)) {
+							// costs 1 emerald
+							player.getInventory().removeItem(new ItemStack[] {
+									new ItemStack(Material.getMaterial(388), 1) });
 							Location loc = b.getLocation();
 							loc.getBlock().setType(Material.TNT);
 							loc.setY(loc.getY() + 1);
@@ -175,6 +189,9 @@ public class TrappersEventListener implements Listener {
 							
 							player.sendMessage("Now, we wait...");
 							plugin.logger.info("Watch your step!");
+							
+						} else {
+							player.sendMessage(ChatColor.RED + "You don't have enough emeralds!");
 						}
 					}
 				}
