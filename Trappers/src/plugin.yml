@@ -1,6 +1,6 @@
 main: edu.unca.nrodrigu.Trappers.Trappers
 name: Trappers
-version: 1.0
+version: 1.1
 author: Nick Rodriguez & Andrew Zorn
 description: Final Project
 commands:
@@ -12,6 +12,10 @@ commands:
     description: generate leaves around player
     usage: /camo
     permission: trappers.camo
+  track:
+    description: return a player's coordinates
+    usage: /track <player>
+    permission: trappers.track
 permission:
   trappers.*:
     description: permission for all plugin commands
@@ -20,4 +24,6 @@ permission:
       trappers.trapper:
         default: op
       trappers.camo:
+        default: true
+      trappers.track:
         default: true

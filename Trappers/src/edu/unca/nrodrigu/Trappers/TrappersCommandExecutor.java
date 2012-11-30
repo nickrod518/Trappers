@@ -33,7 +33,7 @@ public class TrappersCommandExecutor implements CommandExecutor {
 			} else {
 				player = plugin.getServer().getPlayer(args[0]);
 				if (player == null || !player.isOnline()) {
-					sender.sendMessage("Player not found!");
+					sender.sendMessage(ChatColor.RED + "Player not found!");
 					return false;
 				}
 			}
@@ -43,7 +43,7 @@ public class TrappersCommandExecutor implements CommandExecutor {
 			
 			if (!(Boolean) plugin.getMetadata(player, "trapper", plugin)) {
 				plugin.setMetadata(player, "trapper", true, plugin);
-				sender.sendMessage("You are now a trapper! Shears are your new best friend!");
+				sender.sendMessage(ChatColor.GREEN + "You are now a trapper! Shears are your new best friend!");
 				plugin.logger.info(player.getName() + " is a trapper.");
 				
 				// restore the player's health and food
@@ -77,7 +77,7 @@ public class TrappersCommandExecutor implements CommandExecutor {
 					
 			} else {
 				plugin.setMetadata(player, "trapper", false, plugin);
-				sender.sendMessage("You are no longer a trapper.");
+				sender.sendMessage(ChatColor.RED + "You are no longer a trapper.");
 				plugin.logger.info(player.getName() + " is no longer a trapper.");
 			}
 
@@ -112,6 +112,38 @@ public class TrappersCommandExecutor implements CommandExecutor {
 			
 			return true;
 				
+		// return the specified player's coordinates
+		} else if (command.getName().equalsIgnoreCase("track")) {
+			if ((Boolean) plugin.getMetadata((Player) sender, "trapper", plugin)) {
+				if (((Player) sender).getInventory().contains(Material.EMERALD, 5)) {
+					Player player = plugin.getServer().getPlayer(args[0]);
+					
+					if (player == null || !player.isOnline()) {
+						sender.sendMessage(ChatColor.RED + "Player not found!");
+						return false;
+						
+					} else {
+						// costs 1 emerald
+						((Player) sender).getInventory().removeItem(new ItemStack[] {
+								new ItemStack(Material.getMaterial(388), 1) });
+						((Player) sender).sendMessage("That cost 5 emerald.");
+						
+						// return the player's coordinates
+						sender.sendMessage(ChatColor.GREEN + "X: " + (int) player.getLocation().getX()
+								+ " Y: " + (int) player.getLocation().getY()
+								+ " Z: " + (int) player.getLocation().getZ());
+						
+						player.sendMessage(ChatColor.RED + "Someone is tracking you...");
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "You don't have enough emeralds!");
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Only trappers can use that command.");
+			}
+			
+			return true;	
+			
 		} else {
 			return false;
 		}

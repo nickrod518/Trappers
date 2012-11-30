@@ -156,7 +156,7 @@ public class TrappersEventListener implements Listener {
 								loc.getBlock().setType(Material.TNT);
 							}
 							
-							player.sendMessage("Now, we wait...");
+							player.sendMessage(ChatColor.GREEN + "Now, we wait...");
 							plugin.logger.info("Everyone should go cut some trees down!");
 							
 						// if it's any other block, plant a mine (TNT under pressure plate)
@@ -171,7 +171,7 @@ public class TrappersEventListener implements Listener {
 							loc.setY(loc.getY() + 1);
 							loc.getBlock().setType(Material.WOOD_PLATE);
 							
-							player.sendMessage("Now, we wait...");
+							player.sendMessage(ChatColor.GREEN + "Now, we wait...");
 							plugin.logger.info("Watch your step!");
 							
 						} else {
