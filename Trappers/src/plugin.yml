@@ -2,6 +2,7 @@ main: edu.unca.nrodrigu.Trappers.Trappers
 name: Trappers
 version: 1.1
 author: Nick Rodriguez & Andrew Zorn
+#database: true
 description: Final Project
 commands:
   trapper:
@@ -16,14 +17,20 @@ commands:
     description: return a player's coordinates
     usage: /track <player>
     permission: trappers.track
+  score:
+    description: checks the game score
+    usage: /score
+    permission: true
 permission:
   trappers.*:
     description: permission for all plugin commands
-    default: false
+    default: true
     children:
       trappers.trapper:
         default: op
       trappers.camo:
         default: true
       trappers.track:
+        default: true
+      trappers.score:
         default: true

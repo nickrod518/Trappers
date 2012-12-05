@@ -1,3 +1,10 @@
 #This is a sample config.yml
 sample:
   message: Hello Bukkit world.
+
+#sql:
+#  host: 'instance33605.db.xeround.com'
+#  port: 14813
+#  user: 'csci'
+#  pass: '373'
+#  database: 'trappers'
